@@ -68,24 +68,23 @@
 #   (optional) Info to match when looking for nova in the service
 #   catalog. Format is : separated values of the form:
 #   <service_type>:<service_name>:<endpoint_type>
-#   Defaults to 'compute:nova:publicURL'
+#   Defaults to undef
 #
 # [*nova_catalog_admin_info*]
 #   (optional) Same as nova_catalog_info, but for admin endpoint.
-#   Defaults to 'compute:nova:adminURL'
+#   Defaults to undef
 #
 # [*nova_api_insecure*]
 #   (optional) Allow to perform insecure SSL requests to nova.
-#   Defaults to false
+#   Defaults to undef
 #
 # [*nova_ca_certificates_file*]
 #   (optional) Location of CA certificates file to use for nova client requests.
-#   (string value)
-#   Defaults to $::os_service_default
+#   Defaults to undef
 #
 # [*nova_admin_username*]
 #   (optional) Nova admin username.
-#   Defaults to 'nova'
+#   Defaults to undef
 #
 # [*nova_admin_password*]
 #   (optional) Nova admin password.
@@ -97,7 +96,7 @@
 #
 # [*nova_admin_auth_url*]
 #  (optional) Identity service url.
-#   Defaults to 'http://localhost:5000/v2.0'
+#   Defaults to undef
 #
 
 class manila::compute::nova (
@@ -116,10 +115,10 @@ class manila::compute::nova (
   $username                     = 'nova',
   $password                     = undef,
   # DEPRECATED PARAMETERS
-  $nova_catalog_info            = 'compute:nova:publicURL',
-  $nova_catalog_admin_info      = 'compute:nova:adminURL',
-  $nova_api_insecure            = false,
-  $nova_ca_certificates_file    = $::os_service_default,
+  $nova_catalog_info            = undef,
+  $nova_catalog_admin_info      = undef,
+  $nova_api_insecure            = undef,
+  $nova_ca_certificates_file    = undef,
   $nova_admin_username          = undef,
   $nova_admin_password          = undef,
   $nova_admin_tenant_name       = undef,
@@ -127,8 +126,15 @@ class manila::compute::nova (
 ) {
 
   include ::manila::deps
+
+  if $nova_catalog_info {
+    warning('The nova_catalog_info parameter is deprecated, has no effect and will be removed in the future release.')
+  }
+  if $nova_catalog_admin_info {
+    warning('The nova_catalog_admin_info parameter is deprecated, has no effect and will be removed in the future release.')
+  }
   if $nova_api_insecure {
-    warning('The nova_api_insecure parameter is deprecated, use api_insecure instead.')
+    warning('The nova_api_insecure parameter is deprecated, use insecure instead.')
   }
   if $nova_ca_certificates_file {
     warning('The nova_ca_certificates_file is deprecated, use cafile instead.')
@@ -146,12 +152,12 @@ class manila::compute::nova (
     warning('The nova_admin_auth_url parameter is deprecated, use auth_url instead.')
   }
 
-  $insecure_real = pick($insecure, $nova_api_insecure)
-  $cafile_real = pick($cafile, $nova_ca_certificates_file)
-  $username_real = pick($username, $nova_admin_username)
-  $password_real = pick($password, $nova_admin_password)
-  $project_name_real = pick($project_name, $nova_admin_tenant_name)
-  $auth_url_real = pick($auth_url, $nova_admin_auth_url)
+  $insecure_real = pick($nova_api_insecure, $insecure)
+  $cafile_real = pick($nova_ca_certificates_file, $cafile)
+  $username_real = pick($nova_admin_username, $username)
+  $password_real = pick($nova_admin_password, $password)
+  $project_name_real = pick($nova_admin_tenant_name, $project_name)
+  $auth_url_real = pick($nova_admin_auth_url, $auth_url)
 
   manila_config {
     'nova/insecure':                     value => $insecure;
