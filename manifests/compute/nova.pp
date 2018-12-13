@@ -161,19 +161,23 @@ class manila::compute::nova (
 
   manila_config {
     'nova/insecure':                     value => $insecure;
-    'nova/auth_url':                     value => $auth_url_real;
     'nova/token_auth_url':               value => $token_auth_url;
     'nova/auth_type':                    value => $auth_type;
     'nova/cafile':                       value => $cafile;
     'nova/certfile':                     value => $certfile;
     'nova/keyfile':                      value => $keyfile;
-    'nova/user_domain_name':             value => $user_domain_name;
-    'nova/project_domain_name':          value => $project_domain_name;
-    'nova/project_name':                 value => $project_name_real;
     'nova/region_name':                  value => $region_name;
     'nova/timeout':                      value => $timeout;
-    'nova/username':                     value => $username_real;
-    'nova/password':                     value => $password_real, secret => true;
     }
 
+  if $auth_type == 'password' {
+    manila_config {
+      'nova/auth_url':                   value => $auth_url;
+      'nova/username':                   value => $username;
+      'nova/user_domain_name':           value => $user_domain_name;
+      'nova/password':                   value => $password, secret => true;
+      'nova/project_name':               value => $project_name;
+      'nova/project_domain_name':        value => $project_domain_name;
+    }
+  }
 }
