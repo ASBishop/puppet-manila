@@ -155,15 +155,15 @@ class manila::compute::nova (
   $insecure_real = pick($nova_api_insecure, $insecure)
   $cafile_real = pick($nova_ca_certificates_file, $cafile)
   $username_real = pick($nova_admin_username, $username)
-  $password_real = pick($nova_admin_password, $password)
+  $password_real = pick_default($nova_admin_password, $password)
   $project_name_real = pick($nova_admin_tenant_name, $project_name)
   $auth_url_real = pick($nova_admin_auth_url, $auth_url)
 
   manila_config {
-    'nova/insecure':                     value => $insecure;
+    'nova/insecure':                     value => $insecure_real;
     'nova/token_auth_url':               value => $token_auth_url;
     'nova/auth_type':                    value => $auth_type;
-    'nova/cafile':                       value => $cafile;
+    'nova/cafile':                       value => $cafile_real;
     'nova/certfile':                     value => $certfile;
     'nova/keyfile':                      value => $keyfile;
     'nova/region_name':                  value => $region_name;
@@ -173,10 +173,10 @@ class manila::compute::nova (
   if $auth_type == 'password' {
     manila_config {
       'nova/auth_url':                   value => $auth_url;
-      'nova/username':                   value => $username;
+      'nova/username':                   value => $username_real;
       'nova/user_domain_name':           value => $user_domain_name;
-      'nova/password':                   value => $password, secret => true;
-      'nova/project_name':               value => $project_name;
+      'nova/password':                   value => $password_real, secret => true;
+      'nova/project_name':               value => $project_name_real;
       'nova/project_domain_name':        value => $project_domain_name;
     }
   }
