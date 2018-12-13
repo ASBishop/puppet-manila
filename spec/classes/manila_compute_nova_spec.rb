@@ -4,8 +4,8 @@ describe 'manila::compute::nova' do
   shared_examples 'manila::nova' do
     context 'with default parameters' do
       it 'configures manila compute nova' do
-        is_expected.to contain_manila_config('nova/insecure').with_value('<SERVICE DEFAULT>')
-        is_expected.to contain_manila_config('nova/token_auth_url').with_value('<SERVICE_DEFAULT>')
+        is_expected.to contain_manila_config('nova/insecure').with_value(false)
+        is_expected.to contain_manila_config('nova/token_auth_url').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_manila_config('nova/auth_type').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_manila_config('nova/cafile').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_manila_config('nova/certfile').with_value('<SERVICE DEFAULT>')
@@ -26,7 +26,7 @@ describe 'manila::compute::nova' do
     context 'with overridden parameters' do
       let :params do
         {
-          :insecure       => false,
+          :insecure       => true,
           :token_auth_url => 'http://127.0.0.1:5000/v3',
           :auth_url       => 'http://127.0.0.2:5000/',
           :auth_type      => 'password',
@@ -40,8 +40,8 @@ describe 'manila::compute::nova' do
         }
       end
 
-      it 'configures manila nova' do
-        is_expected.to contain_manila_config('nova/insecure').with_value(false)
+      it 'configures manila compute nova with overridden parameters' do
+        is_expected.to contain_manila_config('nova/insecure').with_value(true)
         is_expected.to contain_manila_config('nova/token_auth_url').with_value('http://127.0.0.1:5000/v3')        
         is_expected.to contain_manila_config('nova/auth_url').with_value('http://127.0.0.2:5000/')
         is_expected.to contain_manila_config('nova/auth_type').with_value('password')
