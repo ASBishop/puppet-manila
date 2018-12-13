@@ -5,11 +5,11 @@
 # === Parameters
 #
 # [*insecure*]
-#   Verify HTTPS connections. (boolean value)
+#   (optional) Verify HTTPS connections
 #   Defaults to false
 #
 # [*auth_url*]
-#   (optional) Authentication URL (string value)
+#   (optional) Authentication URL
 #   Defaults to $::os_service_default
 #
 # [*token_auth_url*]
@@ -18,48 +18,48 @@
 #   Defaults to $::os_service_default
 #
 # [*auth_type*]
-#   (optional) Authentication type to load (string value)
+#   (optional) Authentication type to load
 #   Defaults to $::os_service_default
 #
 # [*cafile*]
-#   (optional) PEM encoded Certificate Authority to use when verifying HTTPs
-#   connections. (string value)
+#   (optional) PEM encoded Certificate Authority to use when verifying HTTPS
+#   connections.
 #   Defaults to $::os_service_default
 #
 # [*certfile*]
-#   (optional) PEM encoded client certificate cert file (string value)
+#   (optional) PEM encoded client certificate cert file
 #   Defaults to $::os_service_default
 #
 # [*keyfile*]
-#   (optional) PEM encoded client certificate key file (string value)
+#   (optional) PEM encoded client certificate key file
 #   Defaults to $::os_service_default
 #
 # [*user_domain_name*]
-#   (optional) User's domain name (string value)
+#   (optional) User's domain name
 #   Defaults to 'Default'
 #
 # [*project_domain_name*]
-#   (optional) Domain name containing project (string value)
+#   (optional) Domain name containing project
 #   Defaults to 'Default'
 #
 # [*project_name*]
-#   (optional) Project name to scope to (string value)
+#   (optional) Project name to scope to
 #   Defaults to 'service'
 #
 # [*region_name*]
-#   (optional) Region name for connecting to nova. (string value)
+#   (optional) Region name for connecting to nova
 #   Defaults to $::os_service_default
 #
 # [*timeout*]
-#   (optional) Timeout value for http requests (integer value)
+#   (optional) Timeout value for http requests
 #   Defaults to $::os_service_default
 #
 # [*username*]
-#   (optional) Username (string value)
+#   (optional) Username
 #   Defaults to 'nova'
 #
 # [*password*]
-#   (optional) User's password (string value)
+#   (optional) User's password
 #   Defaults to undef
 #
 # === DEPRECATED PARAMETERS
@@ -75,7 +75,7 @@
 #   Defaults to 'compute:nova:adminURL'
 #
 # [*nova_api_insecure*]
-#   Allow to perform insecure SSL requests to nova. (boolean value)
+#   (optional) Allow to perform insecure SSL requests to nova.
 #   Defaults to false
 #
 # [*nova_ca_certificates_file*]
@@ -128,22 +128,22 @@ class manila::compute::nova (
 
   include ::manila::deps
   if $nova_api_insecure {
-   warning('The nova_api_insecure parameter is deprecated, use api_insecure instead.')
+    warning('The nova_api_insecure parameter is deprecated, use api_insecure instead.')
   }
   if $nova_ca_certificates_file {
-   warning('The nova_ca_certificates_file is deprecated, use cafile instead.')
+    warning('The nova_ca_certificates_file is deprecated, use cafile instead.')
   }
   if $nova_admin_username {
-   warning('The nova_admin_username parameter is deprecated. use username instead.')
+    warning('The nova_admin_username parameter is deprecated, use username instead.')
   }
   if $nova_admin_password {
-   warning('The nova_admin_password parameter is deprecated. use password instead.')
+    warning('The nova_admin_password parameter is deprecated, use password instead.')
   }
   if $nova_admin_tenant_name {
-   warning('The nova_admin_tenant_name parameter is deprecated. use project_name instead.')
+    warning('The nova_admin_tenant_name parameter is deprecated, use project_name instead.')
   }
   if $nova_admin_auth_url {
-   warning('The nova_admin_auth_url parameter is deprecated. use auth_url instead.')
+    warning('The nova_admin_auth_url parameter is deprecated, use auth_url instead.')
   }
 
   $insecure_real = pick($insecure, $nova_api_insecure)
